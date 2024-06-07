@@ -1,0 +1,38 @@
+LU_flow = [[1.5,3,5,10,20,30,40,50,70,100,200,400,800,1000,1500,3000,5000,8000],
+           [0.1,0.15,0.2,0.3,0.45,0.58,0.7,0.8,0.98,1.3,2.2,3.5,5.8,7,9,15,20,30]
+           ]
+
+# find corresponding value when either Loading Unit or flow_rate is given
+def get_LU_flow(tab,LU=None,flow_rate=None):
+    lu_list=tab[0]
+    fr_list=tab[1]
+    # get flow_rate from loading unit
+    if LU:
+        try:
+            # loading unit value is on table
+            ludx=lu_list.index(LU)
+            flow_rate=tab[1][ludx]
+        except:
+            # loading unit value is not on table, use interpolation
+            for n in range(len(lu_list)-1):
+                if LU>lu_list[n] and LU<lu_list[n+1]:
+                    flow_rate=fr_list[n+1]-(((lu_list[n + 1] - LU)*(fr_list[n+1]-fr_list[n]))/(lu_list[n+1]-lu_list[n]))
+        return flow_rate
+    # get loading unit from flow_rate
+    if flow_rate:
+        try:
+            # flow rate value is on table
+            fdx=tab[1].index(flow_rate)
+            LU=tab[0][fdx]
+        except:
+            # flow rate value is not on table, use interpolation
+            for n in range(len(fr_list)-1):
+                if flow_rate>fr_list[n] and flow_rate<fr_list[n+1]:
+                    LU=lu_list[n+1]-(((fr_list[n + 1] - flow_rate)*(lu_list[n+1]-lu_list[n]))/(fr_list[n+1]-fr_list[n]))
+        return LU
+
+if __name__=="__main__":
+    LU=get_LU_flow(LU_flow,flow_rate=10)
+    print('Loading Unit',LU)
+    flow_rate=get_LU_flow(LU_flow,LU=158)
+    print('Flow Rate',flow_rate)
