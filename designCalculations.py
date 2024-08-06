@@ -4,13 +4,25 @@ LU_flow = [[1.5,3,5,10,20,30,40,50,70,100,200,400,800,1000,1500,3000,5000,8000],
 
 Diameters = [0.16,0.11,0.09,0.075,0.063,0.05,0.04,0.032,0.025,0.02,0.016]
 
-LU_Fixtures = {'Wash Hand Basin':2, 'Water Closet':2, 'Kitchen Sink':5, 'Urinary':1, 'Shower':3}
+LU_Fixtures = {'Wash Hand Basin':2, 'Water Closet':2, 'Kitchen Sink':5, 'Shower Head':3, 'Urinal Flush Valve':1}
 
-DU_Fixtures = {'Wash Hand Basin':0.3, 'Water Closet':1.7, 'Kitchen Sink':1.3, 'Urinary':0.4}
+DU_Fixtures = {'Wash Hand Basin':0.3, 'Water Closet':1.7, 'Kitchen Sink':1.3, 'Urinal Flush Valve':0.4}
 
 DU_constant = {'Public':0.7, 'Private':0.5}
 
 DUdiameter_flow = [[0.075, 0.1, 0.15], [2.6, 5.2, 12.4]]
+
+Pipe_types_length = {'Pipe Diameter': [10, 12, 16, 20, 25, 32, 40, 50, 63, 75, 90, 100],
+                     'Elbows 90': [0.7, 0.9, 1.1, 1.3, 1.6, 2.0, 2.3, 2.6, 2.8, 3.4, 3.7, 4.0],
+                     'Elbows 45': [0.1, 0.2, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1,6, 1.7],
+                     'Bend': [0.9, 0.9, 1.1, 1.3, 1.6, 2.0, 2.3, 2.6, 2.8, 3.4, 3.7, 4.0],
+                     'Tee Line Flow': [0.2, 0.4, 0.5, 0.7, 1.0, 1.4, 1.7, 2.3, 2.8, 3.7, 4.5, 5.2],
+                     'Tee Branch': [0.7, 1.1, 1.3, 1.6, 2.0, 2.7, 3.0, 3.7, 4.0, 5.2, 5.8, 6.4],
+                     'Globe Valve': [6.4, 6.7, 6.7, 7.3, 8.8, 11.3, 12.8, 16.5, 18.9, 24.1, 31.5, 33.6],
+                     'Gate Valve': [0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.4, 0.5, 0.5, 0.6, 0.7, 0.8],
+                     'Check Valve': [2.2, 2.2, 2.4, 2.7, 3.4, 4.0, 4.6, 5.8, 6.7, 8.2, 9.9, 11.6],
+                     'Stop Valve': [3.9, 4.6, 4.6, 4.6, 5.2, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5],
+                     'Draw Off Taps':[0.9, 1.6, 2.6, 3.6, 4.6, 0, 0, 0, 0, 0, 0, 0]}
 
 
 # get total loading units from all the fixtures
