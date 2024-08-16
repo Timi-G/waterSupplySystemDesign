@@ -214,7 +214,7 @@ if st.session_state.drain:
         with wastepipe_col[1].container(border=True):
             st.markdown("#### Results")
             # Sum of total fixtures and appliance
-            wastefix=[wastepipe_handbasin,wastepipe_watercloset,wastepipe_urinalflush,wastepipe_kitchensink,wastepipe_bathtub,
+            wastefix=[wastepipe_handbasin,wastepipe_watercloset,wastepipe_kitchensink,wastepipe_urinalflush,wastepipe_bathtub,
                       wastepipe_showerhead,wastepipe_laundrytub,wastepipe_flowdrains]
             wastefix=[int(f) if f.isdigit() else 0 for f in wastefix]
             wastepipe_totalfix=sum(wastefix)
