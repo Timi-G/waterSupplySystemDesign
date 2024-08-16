@@ -66,14 +66,9 @@ if st.session_state.supply:
         with pipe_sizing_results:
             # addition of fixture_appliance
             fix_app=[
-                fix_app_water_closet,fix_app_wash_basin,fix_app_kitchen_sink,fix_app_bathtub_faucet,fix_app_shower_head,
-                fix_app_urinal_flush,fix_app_laundry_tub
+                fix_app_water_closet,fix_app_wash_basin,fix_app_kitchen_sink,fix_app_shower_head,fix_app_urinal_flush,
+                fix_app_bathtub_faucet,fix_app_laundry_tub
             ]
-            # fix_app = [st.session_state.water_closet,st.session_state.wash_hand_basin,st.session_state.kitchen_sink,
-            #             st.session_state.bathtub_faucet,st.session_state.shower_head,st.session_state.urinal_flush_valve,
-            #             st.session_state.laundry_tub
-            #             ]
-            print(fix_app)
             fix_app = [int(f) if f.isdigit() else 0 for f in fix_app]
             total_fix_app = sum(fix_app)
             st.text_area("Total Fixture & Appliances", value=total_fix_app, key="total_fix_app")
