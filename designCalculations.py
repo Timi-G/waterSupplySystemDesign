@@ -22,7 +22,7 @@ Pipe_types_length = {'Pipe Diameter': [10, 12, 16, 20, 25, 32, 40, 50, 63, 75, 9
                      'Gate Valve': [0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.4, 0.5, 0.5, 0.6, 0.7, 0.8],
                      'Check Valve': [2.2, 2.2, 2.4, 2.7, 3.4, 4.0, 4.6, 5.8, 6.7, 8.2, 9.9, 11.6],
                      'Stop Valve': [3.9, 4.6, 4.6, 4.6, 5.2, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5],
-                     'Draw Off Taps':[0.9, 1.6, 2.6, 3.6, 4.6, 0, 0, 0, 0, 0, 0, 0]}
+                     'Draw Off Taps': [0.9, 1.6, 2.6, 3.6, 4.6, 0, 0, 0, 0, 0, 0, 0]}
 
 
 # get total loading units from all the fixtures
@@ -104,6 +104,15 @@ def drainageresult(usage, fixtures):
             d = DUdiameter_flow[0][n]
             break
     return d
+
+def horizontalpipediameter(df):
+    primary_stack_vent=[[75,100,150],[2.6,5.2,12.4]]
+
+    for n,d in enumerate(primary_stack_vent[1]):
+        if df <= d:
+            return primary_stack_vent[0][n]
+        if n==2 and df > d:
+            return primary_stack_vent[0][n]
 
 
 if __name__=="__main__":

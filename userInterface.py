@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit.runtime.state.session_state import WStates
 
-from designCalculations import get_LU_flow, get_DU_flow
+from designCalculations import get_LU_flow, get_DU_flow, horizontalpipediameter
 from designCalculations import LU_Fixtures, DU_Fixtures, LU_flow, DU_constant, Pipe_types_length
 
 # '''Add a data store given tabs calculate for a single section per time'''
@@ -66,14 +66,9 @@ if st.session_state.supply:
         with pipe_sizing_results:
             # addition of fixture_appliance
             fix_app=[
-                fix_app_water_closet,fix_app_wash_basin,fix_app_kitchen_sink,fix_app_bathtub_faucet,fix_app_shower_head,
-                fix_app_urinal_flush,fix_app_laundry_tub
+                fix_app_water_closet,fix_app_wash_basin,fix_app_kitchen_sink,fix_app_shower_head,fix_app_urinal_flush,
+                fix_app_bathtub_faucet,fix_app_laundry_tub
             ]
-            # fix_app = [st.session_state.water_closet,st.session_state.wash_hand_basin,st.session_state.kitchen_sink,
-            #             st.session_state.bathtub_faucet,st.session_state.shower_head,st.session_state.urinal_flush_valve,
-            #             st.session_state.laundry_tub
-            #             ]
-            print(fix_app)
             fix_app = [int(f) if f.isdigit() else 0 for f in fix_app]
             total_fix_app = sum(fix_app)
             st.text_area("Total Fixture & Appliances", value=total_fix_app, key="total_fix_app")
@@ -81,8 +76,12 @@ if st.session_state.supply:
             total_wsfu = sum([fix_app[n]*LU for n,LU in enumerate(LU_Fixtures.values())])
             st.text_area("Total WSFU (Unit Load)", value=total_wsfu, key="total_wsfu")
             # flow rate
-            flow_rate=get_LU_flow(LU_flow,LU=total_wsfu)
-            st.text_area("Flow Rate (L/sec)", value=flow_rate, key="flow_rate")
+            if 'flow_rate' not in st.session_state:
+                st.session_state.flow_rate=0
+            st.session_state.flow_rate=get_LU_flow(LU_flow,LU=total_wsfu)
+            st.write("Flow Rate (L/sec)")
+            with st.container(border=True):
+                st.write(f"{st.session_state.flow_rate}")
             # diameter when velocity is 1m/s2
             if flow_rate:
                 pipe_diameter = (1.273 * (flow_rate/1000)) ** 0.5
@@ -114,17 +113,19 @@ if st.session_state.supply:
             pipelengthcomp=st.columns(2)
             with pipelengthcomp[0]:
                 st.markdown('##### Fixture Types')
-                st.text_input('Elbows 90', key='pipelength_elbow90')
-                st.text_input('Elbows 45', key='pipelength_elbow45')
-                st.text_input('Tees', key='pipelength_tees')
-                st.text_input('Taps', key='pipelength_taps')
-                st.text_input('Actual Measured Pipe Run', key='pipelength_actualmeasuredrun')
+                pipelength_elbow90=st.text_input('Elbows 90', key='pipelength_elbow90')
+                pipelength_elbow45=st.text_input('Elbows 45', key='pipelength_elbow45')
+                pipelength_tees=st.text_input('Tees', key='pipelength_tees')
+                pipelength_taps=st.text_input('Taps', key='pipelength_taps')
+                pipelength_actualmeasuredrun=st.text_input('Actual Measured Pipe Run', key='pipelength_actualmeasuredrun')
+
+                pipe_components_lengths=[pipelength_elbow90,pipelength_elbow45,pipelength_tees,pipelength_taps]
             with pipelengthcomp[1]:
                 st.markdown('##### Pipe Diameter')
-                st.selectbox('Pipe Diameter (mm)',options=Pipe_types_length['Pipe Diameter'],label_visibility='hidden', key='elbow90')
-                st.selectbox('Pipe Diameter (mm)',options=Pipe_types_length['Pipe Diameter'],label_visibility='hidden', key='elbow45')
-                st.selectbox('Pipe Diameter (mm)',options=Pipe_types_length['Pipe Diameter'],label_visibility='hidden', key='tees')
-                st.selectbox('Pipe Diameter (mm)', options=Pipe_types_length['Pipe Diameter'], label_visibility='hidden', key='taps')
+                elbow90=st.selectbox('Pipe Diameter (mm)',options=Pipe_types_length['Pipe Diameter'],label_visibility='hidden', key='elbow90')
+                elbow45=st.selectbox('Pipe Diameter (mm)',options=Pipe_types_length['Pipe Diameter'],label_visibility='hidden', key='elbow45')
+                tees=st.selectbox('Pipe Diameter (mm)',options=Pipe_types_length['Pipe Diameter'],label_visibility='hidden', key='tees')
+                taps=st.selectbox('Pipe Diameter (mm)', options=Pipe_types_length['Pipe Diameter'], label_visibility='hidden', key='taps')
             # with pipelengthcomp[2]:
             #     st.selectbox(label_visibility='hidden')
             #     st.selectbox(label_visibility='hidden')
@@ -132,12 +133,27 @@ if st.session_state.supply:
         with component_result[1].container(border=True):
             st.markdown("#### Results")
             # addition of components
+            pipe_components_lengths=[int(pcl) if pcl.isdigit() else 0 for pcl in pipe_components_lengths]
+            pipelength_nocomp=sum(pipe_components_lengths)
             st.text_area("Total Number of Components",value=pipelength_nocomp,key='pipelength_nocomp')
             # move to top of tab
+            if st.session_state.flow_rate:
+                pipelength_flowrate=st.session_state.flow_rate
             st.text_area("Flow Rate (L/Sec)", value=pipelength_flowrate, key='pipelength_flowrate')
-            # ??
+            # Equivalent Pipe Length is gotten from a table, table has been represented as a dictionary 'Pipe_types_length'
+            pipelength_eqv = 0
+            pipe_components_diameters=[elbow90,elbow45,tees,taps]
+            pipe_components_diameters=[pcd for pcd in pipe_components_diameters]
+            pipe_names=list(Pipe_types_length.keys())
+            for n,(l,d) in enumerate(zip(pipe_components_lengths, pipe_components_diameters)):
+                col_num=Pipe_types_length['Pipe Diameter'].index(d)
+                row=Pipe_types_length[pipe_names[n+1]]
+                eqv=row[col_num]
+                pipelength_eqv = pipelength_eqv + (eqv*l)
             st.text_area("Equivalent Pipe Length (meters)", value=pipelength_eqv, key='pipelength_eqv')
             # sum of equivalent pipe length and actual measured run
+            pipelength_actualmeasuredrun= int(pipelength_actualmeasuredrun) if pipelength_actualmeasuredrun.isdigit() else 0
+            pipelength_eff = pipelength_eqv + pipelength_actualmeasuredrun
             st.text_area("Effective Pipe Length (meters)", value=pipelength_eff, key='pipelength_eff')
 
     # headloss
@@ -170,11 +186,15 @@ if st.session_state.supply:
                 headloss_permissible=headloss_head/headloss_eff
             st.text_area("Head Permissible (m/m run)", headloss_permissible, key='headloss_permissible')
             # Head Loss * Effective Pipe Length
-            headloss_consumed=headloss * headloss_eff
+            if headloss and headloss_eff:
+                headloss_consumed=headloss * int(headloss_eff)
             st.text_area("Head Consumed (meters)", headloss_consumed, key='headloss_consumed')
             # Cummulative Head Consumed (Head Consumed so far for different floors/sections)
-            st.text_area("Progressive Head (meters)", headloss_progressive, key='headloss_progressive')
-
+            if 'progressive_headloss' not in st.session_state:
+                st.session_state.progressive_headloss=0
+            if headloss_consumed:
+                st.session_state.progressive_headloss+=headloss_consumed
+            st.text_area("Progressive Head (meters)", st.session_state.progressive_headloss, key='headloss_progressive')
 
     # Water Supply
     with supplyuitabs[3]:
@@ -219,7 +239,7 @@ if st.session_state.drain:
         with wastepipe_col[1].container(border=True):
             st.markdown("#### Results")
             # Sum of total fixtures and appliance
-            wastefix=[wastepipe_handbasin,wastepipe_watercloset,wastepipe_urinalflush,wastepipe_kitchensink,wastepipe_bathtub,
+            wastefix=[wastepipe_handbasin,wastepipe_watercloset,wastepipe_kitchensink,wastepipe_urinalflush,wastepipe_bathtub,
                       wastepipe_showerhead,wastepipe_laundrytub,wastepipe_flowdrains]
             wastefix=[int(f) if f.isdigit() else 0 for f in wastefix]
             wastepipe_totalfix=sum(wastefix)
@@ -232,6 +252,8 @@ if st.session_state.drain:
             wastepipe_discharge=wastepipe_horizontalfix*k
             st.text_area("Discharge Flow Rate", wastepipe_discharge, key='wastepipe_discharge')
             # use corresponding diameter from rounding up DF in Primary discharge stacks table
+            if wastepipe_discharge:
+                wastepipe_horizontalpipe=horizontalpipediameter(wastepipe_discharge)
             st.text_area("Horizontal Pipe Diameter (mm)", wastepipe_horizontalpipe, key='wastepipe_horizontalpipe')
             # ((DF/K)**3)**1/8
             wastepipe_stackpipe=((wastepipe_discharge/(32*(10**-6)))**3)**0.125
