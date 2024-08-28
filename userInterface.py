@@ -83,8 +83,8 @@ if st.session_state.supply:
             with st.container(border=True):
                 st.write(f"{st.session_state.flow_rate}")
             # diameter when velocity is 1m/s2
-            if flow_rate:
-                pipe_diameter = (1.273 * (flow_rate/1000)) ** 0.5
+            if st.session_state.flow_rate:
+                pipe_diameter = (1.273 * (st.session_state.flow_rate/1000)) ** 0.5
             st.text_area("Pipe Diameter (mm)", value=pipe_diameter, key="pipe_diameter")
 
     # Pipe Length
