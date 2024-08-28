@@ -273,9 +273,9 @@ if st.session_state.drain:
         with septictank_col[1].container(border=True):
             st.markdown("#### Results")
             if septictank_wastewater and septictank_removaleff and septictank_returntime:
-                septictank_wastewater=int(septictank_wastewater)
-                septictank_removaleff=int(septictank_removaleff)
-                septictank_returntime=int(septictank_returntime)
+                septictank_wastewater=float(septictank_wastewater)
+                septictank_removaleff=float(septictank_removaleff)
+                septictank_returntime=float(septictank_returntime)
                 septictankvolume=(septictank_wastewater*septictank_returntime*3.78541)/(86400*septictank_removaleff)
             st.text_area("Septic Tank Volume (Litre)", value=septictankvolume, key='septictankvolume')
 
@@ -291,10 +291,10 @@ if st.session_state.drain:
         with soakaway_col[1].container(border=True):
             st.markdown("#### Results")
             if soakaway_wastewater and soakaway_infiltration and soakaway_retention and soakaway_safetyfactor:
-                soakaway_wastewater=int(soakaway_wastewater)
-                soakaway_infiltration=int(soakaway_infiltration)
-                soakaway_retention=int(soakaway_retention)
-                soakaway_safetyfactor=int(soakaway_safetyfactor)
+                soakaway_wastewater=float(soakaway_wastewater)
+                soakaway_infiltration=float(soakaway_infiltration)
+                soakaway_retention=float(soakaway_retention)
+                soakaway_safetyfactor=float(soakaway_safetyfactor)
                 soakawaysize=(soakaway_wastewater*soakaway_retention)/(soakaway_infiltration*soakaway_safetyfactor)
             st.text_area("Soakaway Size", value=soakawaysize, key='soakawaysize')
 
