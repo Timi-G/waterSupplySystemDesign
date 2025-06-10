@@ -198,8 +198,9 @@ if st.session_state.supply:
 
     # Water Supply
     with supplyuitabs[3]:
-        st.table(columns=('Pipe Number','Loading Units','Flow Rate','Head Available','Pipe Diameter','Flow Velocity',
-                          'Equivalent Pipe','Measured Pipe','Effective Pipe','Progressive Head','Head Consumed'))
+        st.markdown(" ")
+        # st.table(columns=('Pipe Number','Loading Units','Flow Rate','Head Available','Pipe Diameter','Flow Velocity',
+        #                   'Equivalent Pipe','Measured Pipe','Effective Pipe','Progressive Head','Head Consumed'))
 
 if st.session_state.drain:
     main_container.empty()
@@ -300,4 +301,5 @@ if st.session_state.drain:
 
     # Water Result
     with drainuitabs[3]:
-        st.table(columns=("Pipe Number", "Fixture Unit FU", "Accumulated FU","Pipe Size Branch","Pipe Size Stack","Pipe size Vent"))
+        st.markdown(" ")
+        # st.table(columns=("Pipe Number", "Fixture Unit FU", "Accumulated FU","Pipe Size Branch","Pipe Size Stack","Pipe size Vent"))

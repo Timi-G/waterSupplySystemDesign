@@ -133,4 +133,3 @@ if __name__=="__main__":
 
     fix = {'Wash Hand Basin': 3, 'Water Closet': 7, 'Kitchen Sink': 1, 'Urinary': 4}
     print('total units',cal_total_load(LU_Fixtures,fix))
-
