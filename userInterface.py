@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 from streamlit.runtime.state.session_state import WStates
 
@@ -20,16 +21,20 @@ with main_container.container():
         st.session_state.supply = False
 
     def supply():
+        st.session_state.drain = False
         st.session_state.supply = True
 
     def drain():
+        st.session_state.supply = False
         st.session_state.drain = True
 
     st.button('Water Supply', on_click=supply)
     st.button('Drainage', on_click=drain)
 
 if st.session_state.supply:
+    st.markdown("## Water Supply")
     main_container.empty()
+    st.button('Go To Drainage', on_click=drain)
     load_requirement = main_container.columns(2)
     with load_requirement[0]:
         st.radio("State Type", ["Private", "Public"], key="supply_space_type", label_visibility="collapsed", disabled=False,
@@ -199,12 +204,25 @@ if st.session_state.supply:
     # Water Supply
     with supplyuitabs[3]:
         st.markdown(" ")
-        # st.table(columns=('Pipe Number','Loading Units','Flow Rate','Head Available','Pipe Diameter','Flow Velocity',
-        #                   'Equivalent Pipe','Measured Pipe','Effective Pipe','Progressive Head','Head Consumed'))
+        st.button("Get Results", key="supplyResultButton")
+        supplyResult=[st.session_state.supply_pipe_number, total_fix_app, st.session_state.flow_rate, headloss_head, pipe_diameter
+                      , fix_app_max_velocity, pipelength_eqv, pipelength_actualmeasuredrun, pipelength_eff, st.session_state.progressive_headloss
+                      , headloss_consumed]
 
+        if 'supplyResult' not in st.session_state:
+            st.session_state.supplyResult=pd.DataFrame(columns=('Pipe Number','Loading Units','Flow Rate','Head Available','Pipe Diameter','Flow Velocity',
+                            'Equivalent Pipe','Measured Pipe','Effective Pipe','Progressive Head','Head Consumed'))
+        
+        if st.session_state.supplyResultButton:
+            st.session_state.supplyResult.loc[len(st.session_state.supplyResult)] = supplyResult
+        supplyResultTable=st.table(st.session_state.supplyResult)
+
+# Drainage
 if st.session_state.drain:
+    st.markdown("## Drainage")
     main_container.empty()
     drain_requirement = main_container.columns(2)
+    st.button('Go To Water Supply', on_click=supply)
     with drain_requirement[0]:
         st.radio("State Type", ["Private", "Public"], key="drain_space_type", label_visibility="collapsed",
                  disabled=False,
@@ -302,4 +320,11 @@ if st.session_state.drain:
     # Water Result
     with drainuitabs[3]:
         st.markdown(" ")
-        # st.table(columns=("Pipe Number", "Fixture Unit FU", "Accumulated FU","Pipe Size Branch","Pipe Size Stack","Pipe size Vent"))
+        st.button("Get Results", key="drainResultButton")
+        drainResult=[st.session_state.drain_pipe_number, wastepipe_totalfix, wastepipe_horizontalfix, wastepipe_stackpipe, wastepipe_ventpipe]
+        if 'drainResult' not in st.session_state:
+            st.session_state.drainResult = pd.DataFrame(columns=("Pipe Number", "Fixture Unit FU","Pipe Size Branch","Pipe Size Stack","Pipe size Vent"))
+
+        if st.session_state.drainResultButton:
+            st.session_state.drainResult.loc[len(st.session_state.drainResult)] = drainResult
+        drainResultTable=st.table(st.session_state.drainResult)
