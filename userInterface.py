@@ -74,7 +74,7 @@ if st.session_state.supply:
                 fix_app_water_closet,fix_app_wash_basin,fix_app_kitchen_sink,fix_app_shower_head,fix_app_urinal_flush,
                 fix_app_bathtub_faucet,fix_app_laundry_tub
             ]
-            fix_app = [int(f) if f.isdigit() else 0 for f in fix_app]
+            fix_app = [float(f) if f.isdigit() else 0 for f in fix_app]
             total_fix_app = sum(fix_app)
             st.text_area("Total Fixture & Appliances", value=total_fix_app, key="total_fix_app")
             # sum of LU multiplied by single fixtures
@@ -138,7 +138,7 @@ if st.session_state.supply:
         with component_result[1].container(border=True):
             st.markdown("#### Results")
             # addition of components
-            pipe_components_lengths=[int(pcl) if pcl.isdigit() else 0 for pcl in pipe_components_lengths]
+            pipe_components_lengths=[float(pcl) if pcl.isdigit() else 0 for pcl in pipe_components_lengths]
             pipelength_nocomp=sum(pipe_components_lengths)
             st.text_area("Total Number of Components",value=pipelength_nocomp,key='pipelength_nocomp')
             # move to top of tab
@@ -157,7 +157,7 @@ if st.session_state.supply:
                 pipelength_eqv = pipelength_eqv + (eqv*l)
             st.text_area("Equivalent Pipe Length (meters)", value=pipelength_eqv, key='pipelength_eqv')
             # sum of equivalent pipe length and actual measured run
-            pipelength_actualmeasuredrun= int(pipelength_actualmeasuredrun) if pipelength_actualmeasuredrun.isdigit() else 0
+            pipelength_actualmeasuredrun= float(pipelength_actualmeasuredrun) if pipelength_actualmeasuredrun.isdigit() else 0
             pipelength_eff = pipelength_eqv + pipelength_actualmeasuredrun
             st.text_area("Effective Pipe Length (meters)", value=pipelength_eff, key='pipelength_eff')
 
@@ -181,18 +181,18 @@ if st.session_state.supply:
             st.markdown("#### Results")
             # calculation in excel file
             if headloss_diameter:
-                headloss_diameter = int(headloss_diameter)
+                headloss_diameter = float(headloss_diameter)
                 headloss = (0.9/(0.5545*headloss_diameter)**0.6935)**(1/0.5645)
             st.text_area("Head Loss (m/m run)",headloss,key='headloss')
             # Head Available/Effective Pipe Length
             if headloss_head and headloss_eff:
-                headloss_head = int(headloss_head)
-                headloss_eff = int(headloss_eff)
+                headloss_head = float(headloss_head)
+                headloss_eff = float(headloss_eff)
                 headloss_permissible=headloss_head/headloss_eff
             st.text_area("Head Permissible (m/m run)", headloss_permissible, key='headloss_permissible')
             # Head Loss * Effective Pipe Length
             if headloss and headloss_eff:
-                headloss_consumed=headloss * int(headloss_eff)
+                headloss_consumed=headloss * float(headloss_eff)
             st.text_area("Head Consumed (meters)", headloss_consumed, key='headloss_consumed')
             # Cummulative Head Consumed (Head Consumed so far for different floors/sections)
             if 'progressive_headloss' not in st.session_state:
@@ -260,7 +260,7 @@ if st.session_state.drain:
             # Sum of total fixtures and appliance
             wastefix=[wastepipe_handbasin,wastepipe_watercloset,wastepipe_kitchensink,wastepipe_urinalflush,wastepipe_bathtub,
                       wastepipe_showerhead,wastepipe_laundrytub,wastepipe_flowdrains]
-            wastefix=[int(f) if f.isdigit() else 0 for f in wastefix]
+            wastefix=[float(f) if f.isdigit() else 0 for f in wastefix]
             wastepipe_totalfix=sum(wastefix)
             st.text_area("Total Fixture and Appliances",wastepipe_totalfix,key='wastepipe_totalfix')
             # equivalent of total loading unit
