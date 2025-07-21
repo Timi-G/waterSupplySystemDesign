@@ -90,7 +90,7 @@ if st.session_state.supply:
             # diameter when velocity is 1m/s2
             if st.session_state.flow_rate:
                 pipe_diameter = (1.273 * (st.session_state.flow_rate/1000)) ** 0.5
-            st.text_area("Pipe Diameter (mm)", value=pipe_diameter, key="pipe_diameter")
+            st.text_area("Pipe Diameter (meters)", value=pipe_diameter, key="pipe_diameter")
 
     # Pipe Length
     # variables
@@ -269,7 +269,7 @@ if st.session_state.drain:
             # k * horizontal fixture branch (k is different for private and public)
             k=DU_constant[st.session_state.drain_space_type]
             wastepipe_discharge=wastepipe_horizontalfix*k
-            st.text_area("Discharge Flow Rate", wastepipe_discharge, key='wastepipe_discharge')
+            st.text_area("Discharge Flow Rate (L/s)", wastepipe_discharge, key='wastepipe_discharge')
             # use corresponding diameter from rounding up DF in Primary discharge stacks table
             if wastepipe_discharge:
                 wastepipe_horizontalpipe=horizontalpipediameter(wastepipe_discharge)
