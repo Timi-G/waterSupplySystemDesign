@@ -5,6 +5,8 @@ from streamlit.runtime.state.session_state import WStates
 from designCalculations import get_LU_flow, get_DU_flow, horizontalpipediameter
 from designCalculations import LU_Fixtures, DU_Fixtures, LU_flow, DU_constant, Pipe_types_length
 
+from designCalculations import is_number
+
 # '''Add a data store given tabs calculate for a single section per time'''
 
 # some variables
@@ -74,7 +76,7 @@ if st.session_state.supply:
                 fix_app_water_closet,fix_app_wash_basin,fix_app_kitchen_sink,fix_app_shower_head,fix_app_urinal_flush,
                 fix_app_bathtub_faucet,fix_app_laundry_tub
             ]
-            fix_app = [float(f) if f.isdigit() else 0 for f in fix_app]
+            fix_app = [float(f) if is_number(f) else 0 for f in fix_app]
             total_fix_app = sum(fix_app)
             st.text_area("Total Fixture & Appliances", value=total_fix_app, key="total_fix_app")
             # sum of LU multiplied by single fixtures
@@ -138,7 +140,7 @@ if st.session_state.supply:
         with component_result[1].container(border=True):
             st.markdown("#### Results")
             # addition of components
-            pipe_components_lengths=[float(pcl) if pcl.isdigit() else 0 for pcl in pipe_components_lengths]
+            pipe_components_lengths=[float(pcl) if is_number(pcl) else 0 for pcl in pipe_components_lengths]
             pipelength_nocomp=sum(pipe_components_lengths)
             st.text_area("Total Number of Components",value=pipelength_nocomp,key='pipelength_nocomp')
             # move to top of tab
@@ -157,7 +159,7 @@ if st.session_state.supply:
                 pipelength_eqv = pipelength_eqv + (eqv*l)
             st.text_area("Equivalent Pipe Length (meters)", value=pipelength_eqv, key='pipelength_eqv')
             # sum of equivalent pipe length and actual measured run
-            pipelength_actualmeasuredrun= float(pipelength_actualmeasuredrun) if pipelength_actualmeasuredrun.isdigit() else 0
+            pipelength_actualmeasuredrun= float(pipelength_actualmeasuredrun) if is_number(pipelength_actualmeasuredrun) else 0
             pipelength_eff = pipelength_eqv + pipelength_actualmeasuredrun
             st.text_area("Effective Pipe Length (meters)", value=pipelength_eff, key='pipelength_eff')
 
