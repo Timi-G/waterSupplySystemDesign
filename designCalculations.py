@@ -25,6 +25,13 @@ Pipe_types_length = {'Pipe Diameter': [10, 12, 16, 20, 25, 32, 40, 50, 63, 75, 9
                      'Stop Valve': [3.9, 4.6, 4.6, 4.6, 5.2, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5],
                      }
 
+# check if variable is a number
+def is_number(s):
+    try:
+        float(s)  # or int(s) for integers only
+        return True
+    except ValueError:
+        return False
 
 # get total loading units from all the fixtures
 # system parameter takes dictionary argument fixtures and respective loading unit for specific water system being calculated
